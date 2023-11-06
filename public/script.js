@@ -4,6 +4,8 @@ const showSpaceObjects = async () => {
 
     if (!objectsJSON) {
         console.error("Invalid load of JSON");
+        // You might want to show some error to the user here
+        spaceObjectsDiv.innerHTML = "<p>Failed to load space objects. Please try again later.</p>";
         return;
     }
 
@@ -38,13 +40,14 @@ const showSpaceObjects = async () => {
         const img = document.createElement("img");
         img.src = object.img || "path_to_default_space_image.jpg"; // Use a default image if none provided
         img.alt = `Image of ${object.name}`;
+        img.onerror = () => { img.src = "path_to_default_space_image.jpg"; }; // Fallback to default image if the provided one fails to load
         section.append(img);
     });
 };
 
 const getSpaceObjects = async () => {
     try {
-        const response = await fetch('http://localhost:3000/api/space_objects');
+        const response = await fetch('/api/space_objects'); 
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -53,6 +56,6 @@ const getSpaceObjects = async () => {
         console.error("Error retrieving JSON", error);
         return null;
     }
-}
+};
 
 window.onload = () => showSpaceObjects();
